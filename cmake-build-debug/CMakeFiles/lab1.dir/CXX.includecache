@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/yura/source/repos/lab1/main.cpp
+iostream
+-
+exception
+-
+string
+-
+vector
+-
+algorithm
+-
+cassert
+-
+sstream
+-
+iomanip
+-
+fstream
+-
+deque
+-
+

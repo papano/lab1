@@ -1,0 +1,1 @@
+Hello sha256 hash function!
