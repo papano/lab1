@@ -47,9 +47,9 @@ uint32_t sigma_1_256(const uint32_t& x) {
     return rotr(x, 17) ^ rotr(x, 19) ^ (x >> 10);
 }
 
-using roundStat = vector<vector<uint32_t>>;
+using RoundStat = vector<vector<uint32_t>>;
 
-std::string sha256(const std::string& mes, roundStat& stat) {
+std::string sha256(const std::string& mes, RoundStat& stat) {
     vector<uint8_t> vec;
     std::transform(mes.begin(), mes.end(), std::back_inserter(vec), [](char c) -> uint8_t {
         return static_cast<uint8_t>(c);
@@ -150,7 +150,7 @@ std::string sha256(const std::string& mes, roundStat& stat) {
 }
 
 std::string sha256(const std::string& mes) {
-    roundStat dummy;
+    RoundStat dummy;
     return sha256(mes, dummy);
 }
 
@@ -167,7 +167,7 @@ std::string format32(const std::string& in) {
     return oss.str();
 }
 
-std::deque<int> avalanche(const roundStat& stat1, const roundStat& stat2) {
+std::deque<int> avalanche(const RoundStat& stat1, const RoundStat& stat2) {
     std::deque<int> result;
     size_t minSize = std::min(stat1.size(), stat2.size());
     for (size_t i = 0; i < minSize; ++i) {
@@ -199,7 +199,7 @@ std::string changeBit(std::string s, size_t n) {
 int main()
 try {
     vector<std::string> messages{"", "abc", "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"};
-    for (auto m : messages) {
+    for (const auto& m : messages) {
         std::cout << "sha256(\"" << m << "\") = \n" << format32(sha256(m)) << "\n\n";
     }
 //    std::cout << "Enter string to hash: \n";
@@ -215,7 +215,7 @@ try {
     std::stringstream buffer;
     buffer << ifs.rdbuf();
     std::string str = buffer.str();
-    roundStat stat1, stat2;
+    RoundStat stat1, stat2;
     std::string hash = sha256(str, stat1);
     std::cout << "sha256(\"" << str << "\") = \n" << hash << '\n';
     std::ofstream ofs("out.txt");
@@ -233,7 +233,7 @@ try {
     std::string changedHash = sha256(changedStr, stat2);
     std::deque<int> bitDiff = avalanche(stat1, stat2);
     bitDiff.push_front(1);
-    auto print = [](const int& n) { std::cout << " " << n; };
+    auto print = [](const int& n) { std::cout << n << " "; };
     std::cout << "Changed string hash:\n" << changedHash << '\n' << "Bits changed per round:\n";
     std::for_each(bitDiff.cbegin(), bitDiff.cend(), print);
     std::cout << '\n';
